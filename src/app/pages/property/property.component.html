@@ -1,0 +1,78 @@
+<section class="container mt-5">
+  <h3 class="display-5 text-center mb-3">Agregar Propiedades</h3>
+  <div class="row">
+    <div
+      class="col-12 col-sm-6 col-lg-3 mb-4 d-flex justify-content-center"
+      *ngFor="let propiedade of propiedades"
+    >
+      <div class="card ancho">
+        <div class="card-header">
+          <h5 class="card-title text-center">{{ propiedade | titlecase }}</h5>
+        </div>
+        <form class="form-group" #f="ngForm" (ngSubmit)="save(f, propiedade)">
+          <div class="card-body">
+            <input
+              [class.is-invalid]="name.invalid && name.touched"
+              [name]="
+                propiedade === 'escaparate'
+                  ? 'escaparate'
+                  : propiedade === 'columna'
+                  ? 'columna'
+                  : propiedade === 'fila'
+                  ? 'fila'
+                  : 'name'
+              "
+              type="text"
+              #name="ngModel"
+              ngModel
+              required
+              class="form-control"
+              [placeholder]="'Agregar ' + propiedade + '...'"
+            />
+            <select
+              id="fila"
+              class="form-control mt-2"
+              *ngIf="eliminar && propiedade == pro"
+              name="id"
+              ngModel
+              #id="ngModel"
+              (click)="borrar(id.value)"
+            >
+              <ng-template ngFor let-proper [ngForOf]="p" let-i="index">
+                <option [value]="proper._id" *ngIf="propiedade === pro">
+                  {{ proper.name }}
+
+                  <button class="btn ml-auto btn-danger btn-sm"></button>
+                </option>
+              </ng-template>
+            </select>
+          </div>
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-7">
+                <button
+                  type="submit"
+                  [disabled]="f.invalid"
+                  class="btn btn-primary btn-block"
+                >
+                  Guardar
+                </button>
+              </div>
+              <div class="col-5">
+                <button
+                  *ngIf="propiedade.length <= 5 && propiedade !== 'fila'"
+                  type="button"
+                  (click)="eliminar = !eliminar"
+                  (click)="getPropiedad(propiedade)"
+                  class="btn btn-danger btn-block"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,20 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { ToolsService } from '../../services/tools.service';
+import { Component, OnInit } from "@angular/core";
+import { ToolsService } from "../../services/tools.service";
+import { UserService } from "src/app/services/user.service";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  selector: "app-header",
+  templateUrl: "./header.component.html",
+  styleUrls: ["./header.component.css"]
 })
 export class HeaderComponent implements OnInit {
+  constructor(public userService: UserService) {}
 
-  constructor(private toolService: ToolsService) { }
-
-  
-  ngOnInit(): void {
-  }
-
-
-
-
+  ngOnInit(): void {}
 }

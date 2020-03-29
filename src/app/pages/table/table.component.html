@@ -1,211 +1,447 @@
 <div class="container">
-    <div class="row mt-3">
-        <div class="col-2">
-            <button (click)="actualizar()" class="btn btn-secondary mr-3 mb-2 mb-lg-0">Actualizar <i class="fas fa-spinner"></i></button>
-        </div>
-        <div class="col-10">
-            <form class="form-inline my-2 my-lg-0">
-                <input (keyup)="buscar($event)" type="text" class="form-control mr-sm-2 w-50" type="search" placeholder="Buscar Herramienta...">
-                <button class="btn btn-info my-2 my-sm-0" type="submit">Buscar</button>
-            </form>
-        </div>
+  <div class="row mt-3">
+    <div class="col-12 col-sm-6 col-lg-2">
+      <button
+        (click)="actualizar()"
+        class="btn btn-secondary btn-block mr-3 mb-2 mb-lg-0"
+      >
+        Actualizar <i class="fas fa-spinner"></i>
+      </button>
     </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-10">
+      <form class="form-inline my-2 my-lg-0">
+        <input
+          (keyup)="buscar($event)"
+          type="text"
+          class="form-control mr-sm-2 w-100"
+          type="search"
+          placeholder="Buscar Herramienta..."
+        />
+      </form>
+    </div>
+  </div>
 </div>
 <section>
-    <div class="card border-0 rounded-0">
-        <div class="card-body">
-            <div class="table-responsive" id="table-scroll">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Grupo</th>
-                            <th scope="col">Tipo</th>
-                            <th scope="col">Marca</th>
-                            <th scope="col">Color</th>
-                            <th scope="col">Tamaño</th>
-                            <th scope="col">Ubicacion</th>
-                            <th scope="col">Fecha de ingreso</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Informes</th>
-                            <th scope="col">Imagen</th>
-                            <th scope="col">Cantidad</th>
-                            <th scope="col">Configuracion</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ng-template ngFor let-herramienta [ngForOf]="herramientas" let-i="index">
-                            <tr>
-                                <th scope="row">{{ i + 1 }}</th>
-                                <td>{{ herramienta.name }}</td>
-                                <td>{{ herramienta.group }}</td>
-                                <td>{{ herramienta.type }}</td>
-                                <td>{{ herramienta.marca }}</td>
-                                <td>{{ herramienta.color }}</td>
-                                <td>{{ herramienta.size }}</td>
-                                <td>{{ herramienta.location }}</td>
-                                <td>{{ herramienta.createdAt }}</td>
-                                <td>{{ herramienta.state }}</td>
-                                <td>informe</td>
-                                <td><img [src]="urlImamge+herramienta.img" width="50" alt=""></td>
-                                <td>{{ herramienta.quantify }}</td>
-                                <td>
-                                    <button data-target="#updateModal" (click)="updateById(herramienta._id)" data-toggle="modal" class="btn btn-info mr-2"><i class="far fa-edit"></i></button>
-                                    <button (click)="deleteById(herramienta._id)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+  <div class="card border-0 rounded-0">
+    <div class="card-body">
+      <div class="table-responsive" id="table-scroll">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Grupo</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Marca</th>
+              <th scope="col">Color</th>
+              <th scope="col">Tamaño</th>
+              <th scope="col">Ubicacion</th>
+              <th scope="col">Fecha de ingreso</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Informes</th>
+              <th scope="col">Imagen</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Configuracion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-template
+              ngFor
+              let-herramienta
+              [ngForOf]="
+                herramientas | paginate: { itemsPerPage: 5, currentPage: p }
+              "
+              let-i="index"
+            >
+              <tr>
+                <th scope="row">{{ i + 1 }}</th>
+                <td>{{ herramienta.name }}</td>
+                <td>{{ herramienta.group }}</td>
+                <td>{{ herramienta.type }}</td>
+                <td>{{ herramienta.marca }}</td>
+                <td>{{ herramienta.color }}</td>
+                <td>{{ herramienta.size }}</td>
+                <td>
+                  {{ herramienta.location.escaparate }} -
+                  {{ herramienta.location.columna }} -
+                  {{ herramienta.location.fila }}
+                </td>
+                <td>{{ herramienta.createdAt }}</td>
+                <td>{{ herramienta.state }}</td>
+                <td>
+                  <app-modal-reports
+                    [identificador]="herramienta._id"
+                    [name]="stringSpace(herramienta.name)"
+                  ></app-modal-reports>
+                </td>
+                <td>
+                  <app-modal-img
+                    [img]="herramienta.img"
+                    [name]="stringSpace(herramienta.name)"
+                  ></app-modal-img>
+                  <!-- <img [src]="urlImamge+herramienta.img" width="50" alt=""> -->
+                </td>
+                <td>{{ herramienta.quantify }}</td>
+                <td>
+                  <button
+                    data-target="#updateModal"
+                    (click)="updateById(herramienta._id)"
+                    data-toggle="modal"
+                    class="btn btn-info mr-2"
+                  >
+                    <i class="far fa-edit"></i>
+                  </button>
+                  <button
+                    (click)="deleteById(herramienta._id)"
+                    class="btn btn-danger"
+                  >
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
 
-                                    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Actualizar Herramienta</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="card sombras border-0 rounded-0">
-                                                        <div class="card-body">
-                                                            <form [formGroup]="forma" (ngSubmit)="save()">
-                                                                <div class="form-gruop row">
-                                                                    <div class="col-6">
-                                                                        <label for="name">Nombre</label>
-                                                                        <input [class.is-invalid]="forma.get('name').invalid && forma.get('name').touched" formControlName="name" id="name" type="text" class="form-control" placeholder="Nombre">
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <label for="group">Grupo</label>
-                                                                        <select formControlName="group" class="form-control" id="group">
-                                                                            <ng-template ngFor let-group [ngForOf]="grupo">
-                                                                                <option [selected]="group.name == tool.group" [value]="group.name">{{ group.name }}</option>
-                                                                            </ng-template>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-gruop row">
-                                                                    <div class="col-6">
-                                                                        <label for="type">Tipo</label>
-                                                                        <select formControlName="type" class="form-control" id="type">
-                                                                            <ng-template ngFor let-type [ngForOf]="types">
-                                                                                <option [selected]="type.name == tool.type" [value]="type.name">{{ type.name }}</option>
-                                                                            </ng-template>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <label for="marca">Marca</label>
-                                                                        <select formControlName="marca" id="marca" class="form-control">
-                                                                            <ng-template ngFor let-marca [ngForOf]="marcas">
-                                                                                <option [selected]="marca.name == tool.marca" [value]="marca.name">{{ marca.name }}</option>
-                                                                            </ng-template>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-gruop row">
-                                                                    <div class="col-6">
-                                                                        <label for="size">Tamaño</label>
-                                                                        <select formControlName="size" id="size" class="form-control">
-                                                                            <ng-template ngFor let-size [ngForOf]="sizes">
-                                                                                <option [selected]="size.name == tool.size" [value]="size.name">{{ size.name }}</option>
-                                                                            </ng-template>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <label for="color">Color</label>
-                                                                        <select formControlName="color" id="color" class="form-control">
-                                                                            <ng-template ngFor let-color [ngForOf]="colors">
-                                                                                <option [selected]="color.name == tool.color" [value]="color.name">{{ color.name }}</option>
-                                                                            </ng-template>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-gruop row">
-                                                                    <div class="col-6">
-                                                                        <label for="escaparate">Ubicacion - Escaparate</label>
-                                                                        <select formControlName="location" id="escaparate" class="form-control">
-                                                                            <ng-template ngFor let-ubicacione [ngForOf]="ubicaciones">
-                                                                                <option [selected]="ubicacione.escaparate == tool.location" [value]="ubicacione.escaparate">{{ ubicacione.escaparate }}</option>
-                                                                            </ng-template>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-3">
-                                                                        <label for="fila">Fila</label>
-                                                                        <select id="escaparate" class="form-control">
-                                                                            <ng-template ngFor let-ubicacione [ngForOf]="ubicaciones">
-                                                                                <option [value]="ubicacione.fila">{{ ubicacione.columna }}</option>
-                                                                            </ng-template>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-3">
-                                                                        <label for="columna">Columna</label>
-                                                                        <select id="escaparate" class="form-control">
-                                                                            <ng-template ngFor let-ubicacione [ngForOf]="ubicaciones">
-                                                                                <option [value]="ubicacione.fila">{{ ubicacione.fila }}</option>
-                                                                            </ng-template>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-gruop row">
-                                                                    <div class="col-6">
-                                                                        <label id="cantidad" for="cantidad">Cantidad</label>
-                                                                        <div class="input-group mb-3">
-                                                                            <div class="input-group-prepend">
-                                                                                <button class="btn btn-outline-secondary" type="button" id="button-addon1">
-                                                                                        <i class="fas fa-minus"></i>
-                                                                                    </button>
-                                                                            </div>
-                                                                            <input formControlName="quantify" id="cantidad" type="number" class="form-control text-center" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                                                                            <div class="input-group-prepend">
-                                                                                <button class="btn btn-outline-secondary" type="button" id="button-addon1">
-                                                                                        <i class="fas fa-plus"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <label for="state">Estado</label>
-                                                                        <select formControlName="state" id="state" class="form-control">
-                                                                            <ng-template ngFor let-state [ngForOf]="states">
-                                                                                <option [selected]="state.name == tool.state" [value]="state.name">{{ state.name }}</option>
-                                                                            </ng-template>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-gruop row">
-                                                                    <div class="col-12">
-                                                                        <label for="image">Subir Imagen</label>
-                                                                        <div class="custom-file">
-                                                                            <input id="image" type="file" class="custom-file-input" id="validatedCustomFile" required>
-                                                                            <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-                                                                            <div class="invalid-feedback">Example invalid custom file feedback</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row d-flex justify-content-center">
-                                                                    <div class="col-6" *ngIf="tool.img">
-                                                                        <img class="img-fluid" [src]="urlImamge + tool.img" alt="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row mt-3">
-                                                                    <div class="col d-flex flex-row justify-content-end">
-                                                                        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancelar</button>
-                                                                        <button type="submit" class="btn btn-primary ">Guardar</button>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                </div>
-                                            </div>
-                                        </div>
+                  <div
+                    class="modal fade"
+                    id="updateModal"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                            Actualizar Herramienta
+                          </h5>
+                          <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="card sombras border-0 rounded-0">
+                            <div class="card-body">
+                              <form [formGroup]="forma" (ngSubmit)="save()">
+                                <div class="form-gruop row">
+                                  <div class="col-6">
+                                    <label for="name">Nombre</label>
+                                    <input
+                                      [class.is-invalid]="
+                                        forma.get('name').invalid &&
+                                        forma.get('name').touched
+                                      "
+                                      formControlName="name"
+                                      id="name"
+                                      type="text"
+                                      class="form-control"
+                                      placeholder="Nombre"
+                                    />
+                                  </div>
+                                  <div class="col-6">
+                                    <label for="group">Grupo</label>
+                                    <select
+                                      formControlName="group"
+                                      class="form-control"
+                                      id="group"
+                                    >
+                                      <ng-template
+                                        ngFor
+                                        let-group
+                                        [ngForOf]="grupo"
+                                      >
+                                        <option
+                                          [selected]="group.name == tool.group"
+                                          [value]="group.name"
+                                          >{{ group.name }}</option
+                                        >
+                                      </ng-template>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-gruop row">
+                                  <div class="col-6">
+                                    <label for="type">Tipo</label>
+                                    <select
+                                      formControlName="type"
+                                      class="form-control"
+                                      id="type"
+                                    >
+                                      <ng-template
+                                        ngFor
+                                        let-type
+                                        [ngForOf]="types"
+                                      >
+                                        <option
+                                          [selected]="type.name == tool.type"
+                                          [value]="type.name"
+                                          >{{ type.name }}</option
+                                        >
+                                      </ng-template>
+                                    </select>
+                                  </div>
+                                  <div class="col-6">
+                                    <label for="marca">Marca</label>
+                                    <select
+                                      formControlName="marca"
+                                      id="marca"
+                                      class="form-control"
+                                    >
+                                      <ng-template
+                                        ngFor
+                                        let-marca
+                                        [ngForOf]="marcas"
+                                      >
+                                        <option
+                                          [selected]="marca.name == tool.marca"
+                                          [value]="marca.name"
+                                          >{{ marca.name }}</option
+                                        >
+                                      </ng-template>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-gruop row">
+                                  <div class="col-6">
+                                    <label for="size">Tamaño</label>
+                                    <select
+                                      formControlName="size"
+                                      id="size"
+                                      class="form-control"
+                                    >
+                                      <ng-template
+                                        ngFor
+                                        let-size
+                                        [ngForOf]="sizes"
+                                      >
+                                        <option
+                                          [selected]="size.name == tool.size"
+                                          [value]="size.name"
+                                          >{{ size.name }}</option
+                                        >
+                                      </ng-template>
+                                    </select>
+                                  </div>
+                                  <div class="col-6">
+                                    <label for="color">Color</label>
+                                    <select
+                                      formControlName="color"
+                                      id="color"
+                                      class="form-control"
+                                    >
+                                      <ng-template
+                                        ngFor
+                                        let-color
+                                        [ngForOf]="colors"
+                                      >
+                                        <option
+                                          [selected]="color.name == tool.color"
+                                          [value]="color.name"
+                                          >{{ color.name }}</option
+                                        >
+                                      </ng-template>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-gruop row">
+                                  <div class="col-6">
+                                    <label id="escaparate" for="escaparate"
+                                      >Ubicacion - Escaparate</label
+                                    >
+                                    <select
+                                      formControlName="escaparate"
+                                      id="escaparate"
+                                      class="form-control"
+                                    >
+                                      <ng-template
+                                        ngFor
+                                        let-ubicacione
+                                        [ngForOf]="ubicaciones"
+                                      >
+                                        <option
+                                          [selected]="
+                                            ubicacione.escaparate ==
+                                            tool.escaparate
+                                          "
+                                          *ngIf="
+                                            ubicacione.escaparate !== undefined
+                                          "
+                                          [value]="ubicacione.escaparate"
+                                          >{{ ubicacione.escaparate }}</option
+                                        >
+                                      </ng-template>
+                                    </select>
+                                  </div>
+                                  <div class="col-3">
+                                    <label for="columna">Columna</label>
+                                    <select
+                                      id="columna"
+                                      formControlName="columna"
+                                      class="form-control"
+                                    >
+                                      <ng-template
+                                        ngFor
+                                        let-ubicacione
+                                        [ngForOf]="ubicaciones"
+                                      >
+                                        <option
+                                          [selected]="
+                                            ubicacione.columna == tool.columna
+                                          "
+                                          *ngIf="
+                                            ubicacione.columna !== undefined
+                                          "
+                                          [value]="ubicacione.columna"
+                                          >{{ ubicacione.columna }}</option
+                                        >
+                                      </ng-template>
+                                    </select>
+                                  </div>
+                                  <div class="col-3">
+                                    <label for="fila">Fila</label>
+                                    <select
+                                      id="fila"
+                                      formControlName="fila"
+                                      class="form-control"
+                                    >
+                                      <ng-template
+                                        ngFor
+                                        let-ubicacione
+                                        [ngForOf]="ubicaciones"
+                                      >
+                                        <option
+                                          [selected]="
+                                            ubicacione.fila == tool.fila
+                                          "
+                                          *ngIf="ubicacione.fila !== undefined"
+                                          [value]="ubicacione.fila"
+                                          >{{ ubicacione.fila }}</option
+                                        >
+                                      </ng-template>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-gruop row">
+                                  <div class="col-6">
+                                    <label id="cantidad" for="cantidad"
+                                      >Cantidad</label
+                                    >
+                                    <div class="input-group mb-3">
+                                      <div class="input-group-prepend">
+                                        <button
+                                          class="btn btn-outline-secondary"
+                                          type="button"
+                                          id="button-addon1"
+                                        >
+                                          <i class="fas fa-minus"></i>
+                                        </button>
+                                      </div>
+                                      <input
+                                        formControlName="quantify"
+                                        id="cantidad"
+                                        type="number"
+                                        class="form-control text-center"
+                                        aria-label="Example text with button addon"
+                                        aria-describedby="button-addon1"
+                                      />
+                                      <div class="input-group-prepend">
+                                        <button
+                                          class="btn btn-outline-secondary"
+                                          type="button"
+                                          id="button-addon1"
+                                        >
+                                          <i class="fas fa-plus"></i>
+                                        </button>
+                                      </div>
                                     </div>
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </tbody>
-                </table>
-            </div>
+                                  </div>
+                                  <div class="col-6">
+                                    <label for="state">Estado</label>
+                                    <select
+                                      formControlName="state"
+                                      id="state"
+                                      class="form-control"
+                                    >
+                                      <ng-template
+                                        ngFor
+                                        let-state
+                                        [ngForOf]="states"
+                                      >
+                                        <option
+                                          [selected]="state.name == tool.state"
+                                          [value]="state.name"
+                                          >{{ state.name }}</option
+                                        >
+                                      </ng-template>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-gruop row">
+                                  <div class="col-12">
+                                    <label for="image">Subir Imagen</label>
+                                    <div class="custom-file">
+                                      <input
+                                        id="image"
+                                        type="file"
+                                        (change)="fileChangeEvent($event)"
+                                        class=" custom-file-input "
+                                        id="validatedCustomFile "
+                                        required
+                                      />
+                                      <label
+                                        class="custom-file-label "
+                                        for="validatedCustomFile "
+                                        >Choose file...</label
+                                      >
+                                      <div class="invalid-feedback ">
+                                        Example invalid custom file feedback
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row d-flex justify-content-center ">
+                                  <div class="col-6 " *ngIf="tool.img">
+                                    <img
+                                      class="img-fluid "
+                                      [src]="urlImamge + tool.img"
+                                      alt=" "
+                                    />
+                                  </div>
+                                </div>
+                                <div class="row mt-3 ">
+                                  <div
+                                    class="col d-flex flex-row justify-content-end "
+                                  >
+                                    <button
+                                      type="submit"
+                                      class="btn btn-primary "
+                                    >
+                                      Guardar
+                                    </button>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer "></div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </table>
 
+        <div class="container d-flex justify-content-center ">
+          <pagination-controls (pageChange)="p = $event"></pagination-controls>
         </div>
+      </div>
     </div>
+  </div>
 </section>

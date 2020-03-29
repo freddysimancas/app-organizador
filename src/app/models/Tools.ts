@@ -6,8 +6,10 @@ export class ToolsModel {
     public marca: string;
     public size: string;
     public color: string;
-    public location: string;
     public quantify: number;
     public state: string;
     public img: string;
+    public escaparate: string;
+    public columna: string;
+    public fila: string;
 }

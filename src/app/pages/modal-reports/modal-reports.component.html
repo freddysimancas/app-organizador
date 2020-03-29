@@ -1,0 +1,124 @@
+<!-- Button trigger modal -->
+<button
+  type="button"
+  class="btn btn-secondary"
+  (click)="getState()"
+  data-toggle="modal"
+  [attr.data-target]="'#' + name + nameID + nameID"
+>
+  <i class="fas fa-info"></i>
+</button>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  [id]="name + nameID + nameID"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalScrollableTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalScrollableTitle">Novedades</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="mostrar && novedad" class="card mb-3" style="width: 100%;">
+          <div class="card-body">
+            <!-- <h5 class="card-title">{{novedad.inventoryId.name}}</h5> -->
+            <p class="card-text">{{ novedad.report }}</p>
+            <hr />
+            <small>{{ novedad.createdAtReport }}</small>
+          </div>
+        </div>
+
+        <form *ngIf="!mostrar" #forma="ngForm" (ngSubmit)="guardar(forma)">
+          <div class=" form-group ">
+            <label for="message-text " class="col-form-label">ID</label>
+            <input
+              type="text"
+              name="inventoryId"
+              [ngModel]="identificador"
+              required
+              #inventoryId="ngModel"
+              [class.is-invalid]="inventoryId.invalid"
+              class="form-control rounded-0"
+              required
+              disabled
+            />
+          </div>
+          <div class=" form-group ">
+            <label for="message-text " class="col-form-label ">Novedad:</label>
+            <textarea
+              class="form-control text-areak"
+              name="report"
+              ngModel
+              id="message-text "
+              #report="ngModel"
+              [class.is-invalid]="report.invalid && report.touched"
+              required
+            ></textarea>
+            <small class="text-danger" *ngIf="report.invalid && report.touched">
+              La novedad es obligatorio
+            </small>
+          </div>
+          <div class="form-group ">
+            <label for="estado " class="col-form-label ">Estado</label>
+            <select
+              required
+              name="state"
+              ngModel
+              class="custom-select "
+              id="tipo "
+              #state="ngModel"
+              [class.is-invalid]="state.invalid && state.touched"
+            >
+              <option selected disabled>Selecciona El Estado</option>
+              <option [value]="estado.name" *ngFor="let estado of estados">{{
+                estado.name
+              }}</option>
+            </select>
+            <small class="text-danger" *ngIf="state.invalid && state.touched">
+              El estado es obligatorio
+            </small>
+          </div>
+          <button
+            [disabled]="forma.invalid"
+            type="submit"
+            class="btn btn-secondary"
+          >
+            Guardar
+          </button>
+        </form>
+      </div>
+      <div class="modal-footer ">
+        <button
+          type="button "
+          class="btn btn-secondary"
+          *ngIf="!mostrar"
+          (click)="reportById()"
+          (click)="mostrar = !mostrar"
+        >
+          Ver Novedades
+        </button>
+        <button
+          type="button "
+          class="btn btn-secondary"
+          *ngIf="mostrar"
+          (click)="mostrar = !mostrar"
+        >
+          Agregar Reportes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

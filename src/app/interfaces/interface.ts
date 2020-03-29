@@ -13,6 +13,9 @@ export interface tool {
             state: string;
             quantify: number;
             img: string;
+            escaparate: string;
+            columna: string;
+            fila: string;
         }
     ]
 }
